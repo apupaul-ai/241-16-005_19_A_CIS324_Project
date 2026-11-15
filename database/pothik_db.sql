@@ -84,3 +84,4 @@ CREATE TABLE packing_items (
     item_name VARCHAR(100) NOT NULL,
     category VARCHAR(50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE reviews ADD UNIQUE KEY uq_user_destination (user_id, destination_id);
