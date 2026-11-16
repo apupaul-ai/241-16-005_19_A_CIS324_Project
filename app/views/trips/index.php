@@ -15,16 +15,27 @@
         <div class="space-y-4">
             <?php foreach ($trips as $t): ?>
                 <div class="border rounded-xl p-5">
-                    <h2 class="text-lg font-bold"><?= htmlspecialchars($t['title']) ?></h2>
+                    <h2 class="text-lg font-bold">
+                        <a class="hover:underline" href="/pothik/trips.php?action=show&id=<?= (int) $t['id'] ?>">
+                            <?= htmlspecialchars($t['title']) ?>
+                        </a>
+                    </h2>
                     <p class="text-sm text-gray-600 mt-1">
                         <?= $t['start_date'] ? htmlspecialchars($t['start_date']) : 'No start date' ?>
                         &rarr;
                         <?= $t['end_date'] ? htmlspecialchars($t['end_date']) : 'No end date' ?>
                     </p>
                     <p class="text-sm mt-1">
-                        Budget:
-                        <?= $t['budget'] !== null ? 'BDT ' . number_format((float) $t['budget']) : 'Not set' ?>
+                        Budget: <?= $t['budget'] !== null ? 'BDT ' . number_format((float) $t['budget']) : 'Not set' ?>
                     </p>
+                    <div class="flex gap-3 mt-3 text-sm">
+                        <a class="text-pothik-green underline" href="/pothik/trips.php?action=show&id=<?= (int) $t['id'] ?>">Open</a>
+                        <a class="text-pothik-green underline" href="/pothik/trips.php?action=edit&id=<?= (int) $t['id'] ?>">Edit</a>
+                        <form method="post" action="/pothik/trips.php?action=delete&id=<?= (int) $t['id'] ?>"
+                              onsubmit="return confirm('Delete this trip?');">
+                            <button class="text-red-600 underline" type="submit">Delete</button>
+                        </form>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
