@@ -119,3 +119,34 @@ INSERT INTO packing_items (item_name, category) VALUES
 ('Snacks', 'Other'),
 ('Waterproof bag', 'Other'),
 ('Small backpack', 'Other');
+CREATE TABLE cities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL UNIQUE,
+    latitude DECIMAL(9,6) NOT NULL,
+    longitude DECIMAL(9,6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE transport_modes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    cost_per_km DECIMAL(6,2) NOT NULL,
+    note VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO cities (name, latitude, longitude) VALUES
+('Dhaka', 23.810300, 90.412500),
+('Chattogram', 22.356900, 91.783200),
+('Sylhet', 24.894900, 91.868700),
+('Rajshahi', 24.374500, 88.604200),
+('Khulna', 22.845600, 89.540300),
+('Barishal', 22.701000, 90.353500),
+('Rangpur', 25.743900, 89.275200),
+('Mymensingh', 24.747100, 90.420300),
+('Cumilla', 23.460700, 91.180900),
+('Bogura', 24.846500, 89.377300);
+
+INSERT INTO transport_modes (name, cost_per_km, note) VALUES
+('Bus (non-AC)', 2.40, 'BRTA long-distance bus rate, Sept 2026. Real fares can be a little higher.'),
+('Bus (AC)', 5.00, 'Estimate. AC fares are set by bus owners.'),
+('Train (Shovon chair)', 1.10, 'Estimate. Only where a train runs on this route.'),
+('Train (Snigdha)', 2.00, 'Estimate. Only where a train runs on this route.');
