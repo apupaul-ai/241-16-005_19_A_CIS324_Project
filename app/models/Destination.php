@@ -19,4 +19,12 @@ class Destination
         $stmt->execute([$id]);
         return (bool) $stmt->fetch();
     }
+
+    public function find(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT id, name, avg_daily_cost FROM destinations WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
 }

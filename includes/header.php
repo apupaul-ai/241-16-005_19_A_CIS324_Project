@@ -27,6 +27,8 @@ $pageTitle = $pageTitle ?? 'Pothik';
             <li><a href="/pothik/destinations.php" class="hover:text-amber-300">Destinations</a></li>
             <li><a href="/pothik/directory.php" class="hover:text-amber-300">Directory</a></li>
             <li><a href="/pothik/emergency.php" class="hover:text-amber-300">Emergency</a></li>
+            <li><a href="/pothik/budget.php" class="hover:text-amber-300">Budget</a></li>
+            <li><a href="/pothik/packing.php" class="hover:text-amber-300">Packing</a></li>
             <li><a href="/pothik/trips.php" class="hover:text-amber-300">Trip Planner</a></li>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li class="text-amber-300">Hi, <?= htmlspecialchars($_SESSION['user_name']) ?></li>
