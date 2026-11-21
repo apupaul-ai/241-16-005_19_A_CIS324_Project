@@ -2,176 +2,208 @@
 
 <section class="max-w-3xl mx-auto px-4 py-10">
     <h1 class="text-3xl font-bold text-pothik-green mb-2">Trip cost estimator</h1>
-    <p class="text-gray-600 mb-6">Tell us where you start and where you want to go. We estimate the cost and build a plan you can edit.</p>
+    <p class="text-gray-600 mb-2">Pick where you start and where you go. We estimate the cost, and you can change any amount.</p>
+    <p class="text-sm mb-6">
+        Not sure where to go?
+        <a href="/pothik/budget.php" class="text-pothik-gold underline">Plan by your budget &rarr;</a>
+    </p>
 
-    <?php if ($errors): ?>
-        <div class="mb-4 rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-700">
-            <ul class="list-disc pl-5">
-                <?php foreach ($errors as $e): ?>
-                    <li><?= htmlspecialchars($e) ?></li>
-                <?php endforeach; ?>
-            </ul>
+    <?php foreach ($errors as $e): ?>
+        <div class="mb-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+            <?= htmlspecialchars($e) ?>
         </div>
-    <?php endif; ?>
+    <?php endforeach; ?>
 
     <form method="post" action="/pothik/estimate.php" class="grid gap-4 sm:grid-cols-2 border rounded-xl p-5">
-        <div>
-            <label class="block text-sm font-medium mb-1" for="from">I am in</label>
-            <select class="w-full border rounded-lg px-3 py-2" id="from" name="from" required>
-                <option value="">Choose a city</option>
+        <label class="block">
+            <span class="text-sm font-medium">Starting from</span>
+            <select name="from" class="mt-1 w-full border rounded-lg px-3 py-2" required>
+                <option value="">Choose city</option>
                 <?php foreach ($cityOptions as $c): ?>
                     <option value="<?= (int) $c['id'] ?>" <?= $values['from'] === (int) $c['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($c['name']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium mb-1" for="to">I want to go to</label>
-            <select class="w-full border rounded-lg px-3 py-2" id="to" name="to" required>
-                <option value="">Choose a destination</option>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Destination</span>
+            <select name="to" class="mt-1 w-full border rounded-lg px-3 py-2" required>
+                <option value="">Choose destination</option>
                 <?php foreach ($destinationOptions as $d): ?>
                     <option value="<?= (int) $d['id'] ?>" <?= $values['to'] === (int) $d['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($d['name']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium mb-1" for="travelers">Travelers</label>
-            <input class="w-full border rounded-lg px-3 py-2" type="number" min="1" max="20" id="travelers" name="travelers"
-                   value="<?= (int) $values['travelers'] ?>" required>
-        </div>
-        <div>
-            <label class="block text-sm font-medium mb-1" for="days">Days at the destination</label>
-            <input class="w-full border rounded-lg px-3 py-2" type="number" min="1" max="30" id="days" name="days"
-                   value="<?= (int) $values['days'] ?>" required>
-        </div>
-        <div class="sm:col-span-2">
-            <label class="block text-sm font-medium mb-1" for="mode">Transport</label>
-            <select class="w-full border rounded-lg px-3 py-2" id="mode" name="mode" required>
-                <option value="">Choose</option>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Travelers</span>
+            <input type="number" name="travelers" min="1" max="20" value="<?= (int) $values['travelers'] ?>"
+                   class="mt-1 w-full border rounded-lg px-3 py-2" required>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Days</span>
+            <input type="number" name="days" min="1" max="30" value="<?= (int) $values['days'] ?>"
+                   class="mt-1 w-full border rounded-lg px-3 py-2" required>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Transport</span>
+            <select name="mode" class="mt-1 w-full border rounded-lg px-3 py-2" required>
                 <?php foreach ($modes as $m): ?>
                     <option value="<?= (int) $m['id'] ?>" <?= $values['mode'] === (int) $m['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($m['name']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-        </div>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Travel style</span>
+            <select name="style" class="mt-1 w-full border rounded-lg px-3 py-2">
+                <?php foreach ($styles as $key => $s): ?>
+                    <option value="<?= htmlspecialchars($key) ?>" <?= $values['style'] === $key ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($s['label']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </label>
+
+        <label class="block">
+            <span class="text-sm font-medium">Your budget (optional, BDT)</span>
+            <input type="number" name="budget" min="0" step="100"
+                   value="<?= $values['budget'] > 0 ? (int) $values['budget'] : '' ?>"
+                   class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="e.g. 15000">
+        </label>
+
+        <label class="flex items-center gap-2 mt-6">
+            <input type="checkbox" name="peak" value="1" <?= $values['peak'] ? 'checked' : '' ?>>
+            <span class="text-sm">Peak season or holiday (hotels about 20% more)</span>
+        </label>
+
         <div class="sm:col-span-2">
-            <button class="bg-pothik-green text-white font-semibold px-5 py-2 rounded-lg hover:opacity-90" type="submit">
-                Estimate
+            <button class="bg-pothik-green text-white font-semibold px-6 py-2 rounded-lg hover:opacity-90">
+                Estimate cost
             </button>
         </div>
     </form>
 
-    <?php if ($result): ?>
-        <div class="mt-8 border rounded-xl p-5">
-            <h2 class="text-xl font-bold text-pothik-green">
-                <?= htmlspecialchars($result['from']) ?> to <?= htmlspecialchars($result['to']) ?>
-            </h2>
-            <p class="text-sm text-gray-600 mt-1">
-                Straight line about <?= number_format($result['straightKm']) ?> km,
-                road distance estimated at about <?= number_format($result['roadKm']) ?> km.
-            </p>
+<?php if ($result): ?>
+    <div class="mt-8 border rounded-xl p-5">
+        <h2 class="text-xl font-bold text-pothik-green">
+            <?= htmlspecialchars($result['from']) ?> &rarr; <?= htmlspecialchars($result['to']) ?>
+        </h2>
+        <p class="text-sm text-gray-600 mt-1">
+            About <?= round($result['roadKm']) ?> km by road
+            (<?= round($result['straightKm']) ?> km in a straight line) &middot;
+            <?= (int) $result['travelers'] ?> traveler(s) &middot; <?= (int) $result['days'] ?> day(s) &middot;
+            <?= htmlspecialchars($result['style']) ?> style<?= $result['peak'] ? ' &middot; peak season' : '' ?>
+        </p>
 
-            <h3 class="font-bold mt-5 mb-2">Transport options (round trip, <?= (int) $result['travelers'] ?> traveler(s))</h3>
-            <div class="space-y-2">
-                <?php foreach ($result['options'] as $o): ?>
-                    <div class="border rounded-lg px-4 py-2 text-sm <?= $o['name'] === $result['selected'] ? 'border-pothik-green bg-green-50' : '' ?>">
-                        <div class="flex justify-between">
-                            <span class="font-semibold"><?= htmlspecialchars($o['name']) ?></span>
-                            <span>BDT <?= number_format($o['roundTrip']) ?></span>
-                        </div>
-                        <p class="text-xs text-gray-500">
-                            One way per person: BDT <?= number_format($o['oneWay']) ?>
-                            <?php if (!empty($o['note'])): ?> &middot; <?= htmlspecialchars($o['note']) ?><?php endif; ?>
-                        </p>
+        <h3 class="font-semibold mt-5 mb-2">Transport options (round trip)</h3>
+        <ul class="divide-y text-sm">
+            <?php foreach ($result['options'] as $o): ?>
+                <li class="py-2 flex items-start justify-between gap-4 <?= $o['name'] === $result['selected'] ? 'font-semibold' : '' ?>">
+                    <div>
+                        <?= htmlspecialchars($o['name']) ?>
+                        <?php if ((int) $o['roundTrip'] === (int) $result['cheapest']): ?>
+                            <span class="ml-1 text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Cheapest</span>
+                        <?php endif; ?>
+                        <?php if ($o['name'] === $result['selected']): ?>
+                            <span class="ml-1 text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Selected</span>
+                        <?php endif; ?>
+                        <p class="text-xs text-gray-500 font-normal"><?= htmlspecialchars((string) $o['note']) ?></p>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                    <div class="text-right whitespace-nowrap">
+                        BDT <?= number_format($o['roundTrip']) ?>
+                        <?php if ($result['travelers'] > 1): ?>
+                            <p class="text-xs text-gray-500 font-normal">BDT <?= number_format($o['perPerson']) ?> each</p>
+                        <?php endif; ?>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <div class="mt-6 border rounded-xl p-5">
+        <h2 class="text-xl font-bold text-pothik-green">Your budget plan</h2>
+        <p class="text-sm text-gray-600 mb-4">Change any amount and the total updates.</p>
+
+        <div class="space-y-3">
+            <?php foreach ($result['items'] as $it): ?>
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p><?= htmlspecialchars($it['label']) ?></p>
+                        <p class="text-xs text-gray-500"><?= htmlspecialchars($it['note']) ?></p>
+                    </div>
+                    <input type="number" min="0" step="50"
+                           value="<?= (int) $it['amount'] ?>" data-default="<?= (int) $it['amount'] ?>"
+                           class="plan-input w-32 border rounded-lg px-3 py-2 text-right"
+                           aria-label="<?= htmlspecialchars($it['label']) ?>">
+                </div>
+            <?php endforeach; ?>
         </div>
 
-        <div class="mt-6 border rounded-xl p-5">
-            <h2 class="text-xl font-bold text-pothik-green mb-1">Your budget plan</h2>
-            <p class="text-sm text-gray-600 mb-4">
-                Suggested for <?= (int) $result['days'] ?> day(s) with <?= htmlspecialchars($result['selected']) ?>.
-                Change any amount and the total updates.
-            </p>
-
-            <div class="space-y-3">
-                <?php
-                $items = [
-                    ['Transport (round trip)', $result['transport']],
-                    ['Stay and food', $result['stay']],
-                    ['Shopping and extras', $result['extras']],
-                    ['Emergency buffer', $result['buffer']],
-                ];
-                foreach ($items as [$label, $amount]):
-                ?>
-                    <div class="flex items-center justify-between gap-4">
-                        <label class="text-sm"><?= htmlspecialchars($label) ?></label>
-                        <input class="plan-field w-36 border rounded-lg px-3 py-2 text-right" type="number" min="0" step="1"
-                               value="<?= (int) $amount ?>" data-suggested="<?= (int) $amount ?>">
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="flex justify-between border-t mt-4 pt-3 text-lg font-bold">
-                <span>Total</span>
-                <span id="plan-total">BDT 0</span>
-            </div>
-            <div class="flex justify-between text-sm text-gray-600">
-                <span>Per person</span>
-                <span id="plan-person" data-travelers="<?= (int) $result['travelers'] ?>">BDT 0</span>
-            </div>
-
-            <button id="plan-reset" type="button" class="mt-4 text-sm text-pothik-green underline">
-                Reset to suggested amounts
-            </button>
-            <p class="mt-3 text-xs text-gray-500">
-                This is an estimate. Boat or ferry tickets and local transfers are not included.
-            </p>
+        <div class="border-t mt-5 pt-4 flex items-center justify-between">
+            <span class="text-lg font-bold">Total</span>
+            <span id="planTotal" class="text-lg font-bold"
+                  data-travelers="<?= (int) $result['travelers'] ?>"
+                  data-budget="<?= (int) $result['budget'] ?>">BDT 0</span>
         </div>
+        <div class="flex items-center justify-between text-sm text-gray-600">
+            <span>Per person</span><span id="planPerPerson">BDT 0</span>
+        </div>
+        <p id="planStatus" class="mt-3 text-sm font-medium"></p>
 
-        <script>
-        (function () {
-            var fields = document.querySelectorAll('.plan-field');
-            var totalEl = document.getElementById('plan-total');
-            var personEl = document.getElementById('plan-person');
-            var travelers = parseInt(personEl.dataset.travelers, 10) || 1;
+        <button type="button" id="planReset" class="mt-4 text-sm text-pothik-green underline">Reset to suggested amounts</button>
+        <p class="text-xs text-gray-500 mt-4">
+            This is an estimate. Boat or ferry fares are included only where we have a fixed minimum fare;
+            other local transfers are not included. Check current prices before you book.
+        </p>
+    </div>
 
-            function fmt(n) {
-                return 'BDT ' + Math.round(n).toLocaleString('en-US');
+    <script>
+    (function () {
+        var inputs = document.querySelectorAll('.plan-input');
+        var totalEl = document.getElementById('planTotal');
+        var perEl = document.getElementById('planPerPerson');
+        var statusEl = document.getElementById('planStatus');
+        var travelers = parseInt(totalEl.dataset.travelers, 10) || 1;
+        var budget = parseInt(totalEl.dataset.budget, 10) || 0;
+
+        function fmt(n) { return 'BDT ' + Math.round(n).toLocaleString('en-US'); }
+
+        function update() {
+            var sum = 0;
+            inputs.forEach(function (i) { sum += Math.max(0, parseFloat(i.value) || 0); });
+            totalEl.textContent = fmt(sum);
+            perEl.textContent = fmt(sum / travelers);
+
+            if (budget > 0) {
+                var diff = budget - sum;
+                if (diff >= 0) {
+                    statusEl.textContent = 'Within your budget by ' + fmt(diff) + '.';
+                    statusEl.className = 'mt-3 text-sm font-medium text-green-700';
+                } else {
+                    statusEl.textContent = 'Over your budget by ' + fmt(-diff) + '. Try Budget style or a cheaper transport.';
+                    statusEl.className = 'mt-3 text-sm font-medium text-red-700';
+                }
             }
+        }
 
-            function update() {
-                var sum = 0;
-                fields.forEach(function (f) {
-                    var v = parseFloat(f.value);
-                    if (!isNaN(v) && v > 0) {
-                        sum += v;
-                    }
-                });
-                totalEl.textContent = fmt(sum);
-                personEl.textContent = fmt(sum / travelers);
-            }
-
-            fields.forEach(function (f) {
-                f.addEventListener('input', update);
-            });
-
-            document.getElementById('plan-reset').addEventListener('click', function () {
-                fields.forEach(function (f) {
-                    f.value = f.dataset.suggested;
-                });
-                update();
-            });
-
+        inputs.forEach(function (i) { i.addEventListener('input', update); });
+        document.getElementById('planReset').addEventListener('click', function () {
+            inputs.forEach(function (i) { i.value = i.dataset.default; });
             update();
-        })();
-        </script>
-    <?php endif; ?>
+        });
+        update();
+    })();
+    </script>
+<?php endif; ?>
 </section>
 
 <?php require __DIR__ . '/../../../includes/footer.php'; ?>

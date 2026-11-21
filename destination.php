@@ -1,8 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/csrf_auto.php';
 require_once __DIR__ . '/config/config.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/includes/functions.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
@@ -77,12 +76,23 @@ $listStmt = $pdo->prepare(
 $listStmt->execute([$id]);
 $reviews = $listStmt->fetchAll();
 
+$img = destination_image_url($destination['image'] ?? null);
+
 $pageTitle = $destination['name'];
 require __DIR__ . '/includes/header.php';
 ?>
 
 <section class="max-w-4xl mx-auto px-4 py-10">
     <a href="/pothik/destinations.php" class="text-sm text-pothik-green hover:underline">&larr; Back to destinations</a>
+
+    <?php if ($img): ?>
+        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($destination['name']) ?>"
+             class="w-full h-64 sm:h-96 object-cover rounded-xl mt-6">
+    <?php else: ?>
+        <div class="w-full h-64 sm:h-96 mt-6 rounded-xl bg-gradient-to-br from-pothik-green to-green-700 flex items-center justify-center text-white text-7xl font-bold">
+            <?= htmlspecialchars(mb_substr($destination['name'], 0, 1)) ?>
+        </div>
+    <?php endif; ?>
 
     <p class="mt-6 text-xs uppercase text-pothik-gold font-semibold">
         <?= htmlspecialchars($destination['category']) ?>

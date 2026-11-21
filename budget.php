@@ -1,8 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/csrf_auto.php';
 require_once __DIR__ . '/config/config.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/app/controllers/InfoController.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/app/controllers/BudgetController.php';
 
-(new InfoController($pdo))->budget();
+(new BudgetController($pdo))->index();
